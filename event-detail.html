@@ -108,7 +108,10 @@
     .scroll-top { position: fixed; bottom: 28px; right: 28px; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,.12); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; color: #555; }
   </style>
   <script src="https://cdn.amplitude.com/script/3d66176055ee43dd13ae4795debff1f7.js"></script>
-  <script>window.amplitude.init('3d66176055ee43dd13ae4795debff1f7', { fetchRemoteConfig: true, autocapture: true });</script>
+  <script>
+    window.amplitude.add(window.amplitude.sessionReplay.plugin({ sampleRate: 1 }));
+    window.amplitude.init('3d66176055ee43dd13ae4795debff1f7', { fetchRemoteConfig: true, autocapture: true });
+  </script>
 </head>
 <body>
 

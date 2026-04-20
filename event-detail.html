@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>슈퍼브랜드데이 : 메디힐 기획전 상세 | 올리브영</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; font-size: 14px; color: #222; background: #fff; }
+    a { text-decoration: none; color: inherit; }
+
+    .top-bar { background: #fff; border-bottom: 1px solid #eee; padding: 8px 0; }
+    .top-bar-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: flex-end; gap: 16px; font-size: 12px; color: #555; padding: 0 20px; }
+    .top-bar-inner a { color: #555; }
+    .top-bar-inner span { color: #ddd; }
+
+    header { background: #fff; border-bottom: 2px solid #222; padding: 16px 0; position: sticky; top: 0; z-index: 100; }
+    .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 24px; padding: 0 20px; }
+    .logo { font-size: 26px; font-weight: 900; letter-spacing: -1px; color: #222; flex-shrink: 0; }
+    .search-wrap { flex: 1; max-width: 500px; }
+    .search-box { display: flex; border: 2px solid #222; border-radius: 24px; overflow: hidden; }
+    .search-box input { flex: 1; border: none; outline: none; padding: 10px 16px; font-size: 14px; font-family: inherit; }
+    .search-box button { background: none; border: none; cursor: pointer; padding: 0 16px; font-size: 18px; }
+    .header-actions { display: flex; gap: 16px; margin-left: auto; font-size: 13px; }
+    .header-actions a { display: flex; align-items: center; gap: 4px; color: #444; white-space: nowrap; }
+
+    nav.gnb { background: #fff; border-bottom: 1px solid #eee; }
+    .gnb-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: stretch; padding: 0 20px; }
+    .gnb-category { display: flex; align-items: center; gap: 8px; padding: 14px 20px; background: #222; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; position: relative; user-select: none; }
+    .gnb-category:hover .category-dropdown { display: block; }
+    .category-dropdown { display: none; position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid #ddd; width: 180px; z-index: 200; box-shadow: 2px 4px 12px rgba(0,0,0,.1); }
+    .category-dropdown a { display: block; padding: 10px 16px; font-size: 13px; color: #333; border-bottom: 1px solid #f5f5f5; }
+    .category-dropdown a:hover { background: #f5f5f5; }
+    .gnb-menu { display: flex; list-style: none; align-items: center; }
+    .gnb-menu li a { display: block; padding: 14px 22px; font-size: 15px; font-weight: 600; color: #222; white-space: nowrap; }
+    .gnb-menu li a:hover { color: #01a862; }
+    .gnb-menu li a.sale { color: #e5253e; }
+    .gnb-menu li a.active { color: #01a862; border-bottom: 2px solid #01a862; }
+
+    /* Breadcrumb */
+    .breadcrumb-wrap { max-width: 1200px; margin: 0 auto; padding: 16px 20px 0; }
+    .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
+    .breadcrumb a { color: #888; }
+    .breadcrumb a:hover { color: #222; }
+    .breadcrumb .sep { color: #ccc; }
+    .breadcrumb .current { color: #222; font-weight: 600; }
+
+    /* Event title bar */
+    .event-title-bar { max-width: 1200px; margin: 0 auto; padding: 20px 20px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; }
+    .event-page-title { font-size: 22px; font-weight: 800; color: #222; }
+    .event-title-right { display: flex; align-items: center; gap: 12px; }
+    .event-period { font-size: 13px; color: #888; }
+    .share-btns { display: flex; gap: 8px; }
+    .share-btn { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; border: 1px solid #e5e5e5; background: #fff; transition: background .2s; }
+    .share-btn:hover { background: #f5f5f5; }
+    .share-btn.kakao { background: #fee500; border-color: #fee500; }
+    .share-btn.facebook { background: #1877f2; border-color: #1877f2; color: #fff; }
+    .share-btn.url { background: #f5f5f5; }
+
+    /* Event content images */
+    .event-content { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+    .event-content img { width: 100%; display: block; }
+
+    /* Product section */
+    .product-section { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    .prod-section-title { font-size: 18px; font-weight: 800; color: #222; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid #222; }
+
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+    .product-card { position: relative; }
+    .product-card-link { display: block; cursor: pointer; transition: transform .2s; }
+    .product-card-link:hover { transform: translateY(-4px); }
+    .product-thumb { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1; margin-bottom: 10px; background: #f5f5f5; }
+    .product-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .badge { position: absolute; top: 8px; left: 8px; background: #ff6b35; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 7px; border-radius: 4px; z-index: 2; }
+    .badge.best { background: #01a862; }
+    .badge.otuk { background: #8b5cf6; }
+    .badge.new { background: #2196f3; }
+    .product-brand { font-size: 11px; color: #888; margin-bottom: 4px; }
+    .product-name { font-size: 13px; color: #222; line-height: 1.4; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-price { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .original-price { font-size: 12px; color: #aaa; text-decoration: line-through; }
+    .sale-price { font-size: 15px; font-weight: 800; color: #222; }
+    .product-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: 600; }
+    .tag.sale { background: #fff0f0; color: #e5253e; border: 1px solid #ffd4d4; }
+    .tag.coupon { background: #fff8e6; color: #e88b00; border: 1px solid #ffe8b0; }
+    .tag.gift { background: #f0f8ff; color: #2196f3; border: 1px solid #b3d9ff; }
+    .tag.limited { background: #fdf4ff; color: #9333ea; border: 1px solid #e9d5ff; }
+
+    .wish-btn {
+      position: absolute; bottom: calc(10px + 8px); right: 8px;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(255,255,255,.88); border: 1px solid #ddd;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; cursor: pointer; z-index: 3;
+      transition: transform .15s;
+      user-select: none;
+    }
+    .wish-btn:hover { transform: scale(1.15); }
+    .wish-btn.liked { background: #fff0f0; border-color: #ffb0b0; }
+
+    footer { background: #f8f8f8; border-top: 1px solid #e5e5e5; padding: 36px 20px; margin-top: 60px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-links { display: flex; gap: 24px; margin-bottom: 18px; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: #666; }
+    .footer-info { font-size: 11px; color: #aaa; line-height: 1.9; }
+
+    .scroll-top { position: fixed; bottom: 28px; right: 28px; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,.12); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <a href="https://www.oliveyoung.co.kr/store/member/memberJoin.do" target="_blank">회원가입</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/member/memberLogin.do" target="_blank">로그인</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/cart/getCartList.do" target="_blank">장바구니</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/order/orderList.do" target="_blank">주문배송</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/customer/customerCenter.do" target="_blank">고객센터</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/storeMap/getStoreMap.do" target="_blank">올영매장</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/etc/getGlobalIntro.do" target="_blank">Global</a>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">OLIVE YOUNG</a>
+    <div class="search-wrap">
+      <form action="https://www.oliveyoung.co.kr/store/search/getSearchMain.do" method="get" target="_blank">
+        <div class="search-box">
+          <input type="text" name="query" placeholder="상품, 브랜드, 성분 검색" />
+          <button type="submit">🔍</button>
+        </div>
+      </form>
+    </div>
+    <div class="header-actions">
+      <a href="https://www.oliveyoung.co.kr/store/delivery/getDeliveryList.do" target="_blank">🛎 오늘드림</a>
+      <a href="https://www.oliveyoung.co.kr/store/storeMap/getStoreMap.do" target="_blank">📍 올영매장찾기 ▾</a>
+      <a href="https://www.oliveyoung.co.kr/store/display/getRecentGoodsList.do" target="_blank">🕐 최근 본 상품 ▾</a>
+    </div>
+  </div>
+</header>
+
+<nav class="gnb">
+  <div class="gnb-inner">
+    <div class="gnb-category">
+      ☰ 카테고리
+      <div class="category-dropdown">
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010012" target="_blank">스킨케어</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010010" target="_blank">메이크업/네일</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010011" target="_blank">뷰티소품</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010014" target="_blank">더모 코스메틱</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010013" target="_blank">향수/디퓨저</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010009" target="_blank">헤어케어</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010008" target="_blank">바디케어</a>
+      </div>
+    </div>
+    <ul class="gnb-menu">
+      <li><a href="https://www.oliveyoung.co.kr/store/display/getSpecialList.do" target="_blank">오특</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/ranking/getRankingMain.do" target="_blank">랭킹</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/etc/getBerryMain.do" target="_blank">올리브베리</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/display/getThemeShopList.do" target="_blank">테마관</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/display/getPlanShopList.do" target="_blank">기획전</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/sale/getSaleMain.do" target="_blank"><span class="sale">세일</span></a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/etc/getGiftCardMain.do" target="_blank">기프트카드</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/member/memberBenefitMain.do" target="_blank">멤버십/쿠폰</a></li>
+      <li><a href="event.html" class="active">이벤트</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="breadcrumb-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">홈</a>
+    <span class="sep">›</span>
+    <a href="event.html">이벤트</a>
+    <span class="sep">›</span>
+    <span class="current">슈퍼브랜드데이 : 메디힐</span>
+  </div>
+</div>
+
+<div class="event-title-bar">
+  <div class="event-page-title">슈퍼브랜드데이 : 메디힐</div>
+  <div class="event-title-right">
+    <span class="event-period">26.04.20 - 26.04.23</span>
+    <div class="share-btns">
+      <div class="share-btn kakao" title="카카오톡 공유">💬</div>
+      <div class="share-btn facebook" title="페이스북 공유">f</div>
+      <div class="share-btn url" title="URL 복사">🔗</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main event content images -->
+<div class="event-content">
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_KV1.jpg" alt="슈퍼브랜드데이 메디힐 KV1" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_KV2.jpg" alt="슈퍼브랜드데이 메디힐 KV2" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_KV3.jpg" alt="슈퍼브랜드데이 메디힐 KV3" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_mc_intro.gif" alt="슈퍼브랜드데이 메디힐 소개" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_pc_cont1.jpg" alt="메디힐 혜택 1" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_pc_cont2.jpg" alt="메디힐 혜택 2" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_pc_cont3.jpg" alt="메디힐 혜택 3" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_pc_cont4.jpg" alt="메디힐 혜택 4" />
+  <img src="https://image.oliveyoung.co.kr/uploads/contents/202604/20superBrandDay/2604_20SuperBrandDay_pc_cont5.jpg" alt="메디힐 혜택 5" />
+</div>
+
+<!-- Products -->
+<div class="product-section">
+  <div class="prod-section-title">기획전 상품</div>
+  <div class="product-grid">
+
+    <!-- Product 1 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000252385" target="_blank">
+        <div class="product-thumb">
+          <span class="badge">한정</span>
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0025/A00000025238528ko.png" alt="메디힐 더마 패드 14매 3종+1 기획" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[슈브데 한정 판매] 메디힐 더마 패드 14매 3종+1 기획 (총 56매)</div>
+        <div class="product-price">
+          <span class="sale-price">9,900원</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag limited">한정판매</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000252384" target="_blank">
+        <div class="product-thumb">
+          <span class="badge">한정</span>
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0025/A00000025238427ko.png" alt="메디힐 더마 패드 100+100매 기획" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[슈브데 한정 판매] 메디힐 더마 패드 100+100매 (+에센셜 마스크 4매) 특별 구성 3종 중 택 1</div>
+        <div class="product-price">
+          <span class="original-price">47,900원~</span>
+          <span class="sale-price">29,900원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+          <span class="tag limited">한정판매</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000171427" target="_blank">
+        <div class="product-thumb">
+          <span class="badge best">베스트</span>
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0017/A000000171427217ko.png" alt="메디힐 더마 패드 200매 대용량 기획" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[슈브데 한정 특가/1위 패드] 메디힐 더마 패드 200매 대용량 기획 세트 7종 골라담기</div>
+        <div class="product-price">
+          <span class="original-price">39,900원~</span>
+          <span class="sale-price">28,000원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+          <span class="tag coupon">쿠폰</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000171426" target="_blank">
+        <div class="product-thumb">
+          <span class="badge best">베스트</span>
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0017/A00000017142695ko.png" alt="메디힐 더마 패드 100매 7종" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[76관왕 No.1] 메디힐 더마 패드 100매 7종 피부 고민별 골라담기</div>
+        <div class="product-price">
+          <span class="original-price">26,000원~</span>
+          <span class="sale-price">17,200원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+          <span class="tag coupon">쿠폰</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 5 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000252379" target="_blank">
+        <div class="product-thumb">
+          <span class="badge">한정</span>
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0025/A00000025237908ko.png" alt="메디힐 하이퍼 PDRN 마스크 10매" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[슈브데 한정 증정] 메디힐 하이퍼 PDRN 마스크 10매 (+2매 증정)</div>
+        <div class="product-price">
+          <span class="original-price">45,000원</span>
+          <span class="sale-price">29,900원</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+          <span class="tag gift">증정</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 6 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000252387" target="_blank">
+        <div class="product-thumb">
+          <span class="badge">한정</span>
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0025/A00000025238709ko.png" alt="메디힐 에센셜 마스크 30매" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[슈브데 한정 판매] 메디힐 에센셜 마스크 30매 대용량 기획 3종 중 택 1</div>
+        <div class="product-price">
+          <span class="original-price">60,000원~</span>
+          <span class="sale-price">26,900원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+          <span class="tag limited">한정판매</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 7 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000223414" target="_blank">
+        <div class="product-thumb">
+          <span class="badge best">베스트</span>
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0022/A000000223414109ko.png" alt="메디힐 에센셜 마스크팩 10+1매" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[슈브데 한정 10+1매 판매/15년 연속 1위] 메디힐 에센셜 마스크팩 10+1매 기획 7종 골라담기</div>
+        <div class="product-price">
+          <span class="original-price">20,000원~</span>
+          <span class="sale-price">10,000원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">50%</span>
+          <span class="tag coupon">쿠폰</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 8 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000229695" target="_blank">
+        <div class="product-thumb">
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0022/A00000022969537ko.png" alt="메디힐 랩핑 세럼 마스크 10매" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[장도연 PICK/초밀착 세럼팩] 메디힐 랩핑 세럼 마스크 10매 6종</div>
+        <div class="product-price">
+          <span class="original-price">30,000원~</span>
+          <span class="sale-price">13,900원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 9 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000214895" target="_blank">
+        <div class="product-thumb">
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0021/A00000021489521ko.jpg" alt="메디힐 하이퍼 마스크 10매" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[겔마스크/10매] 메디힐 하이퍼 마스크 2종 (콜라겐/히알루론산)</div>
+        <div class="product-price">
+          <span class="original-price">45,000원~</span>
+          <span class="sale-price">29,900원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+          <span class="tag coupon">쿠폰</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 10 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000212351" target="_blank">
+        <div class="product-thumb">
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0021/A00000021235130ko.jpg" alt="메디힐 하이퍼 마스크 4매" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">[겔마스크/4매] 메디힐 하이퍼 마스크 2종 (콜라겐/히알루론산)</div>
+        <div class="product-price">
+          <span class="original-price">18,000원~</span>
+          <span class="sale-price">12,900원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">할인</span>
+          <span class="tag coupon">쿠폰</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 11 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000210485" target="_blank">
+        <div class="product-thumb">
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0021/A00000021048537ko.png" alt="메디힐 더마 패드" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">메디힐 더마 패드 50매 (민감 피부용)</div>
+        <div class="product-price">
+          <span class="original-price">22,000원</span>
+          <span class="sale-price">15,400원</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">30%</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+    <!-- Product 12 -->
+    <div class="product-card">
+      <a class="product-card-link" href="https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000202914" target="_blank">
+        <div class="product-thumb">
+          <img src="https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/thumbnails/400/10/0000/0020/A00000020291451ko.png" alt="메디힐 에센셜 마스크팩 20매" loading="lazy" />
+        </div>
+        <div class="product-brand">메디힐</div>
+        <div class="product-name">메디힐 에센셜 마스크팩 20매 4종 골라담기</div>
+        <div class="product-price">
+          <span class="original-price">36,000원~</span>
+          <span class="sale-price">18,000원~</span>
+        </div>
+        <div class="product-tags">
+          <span class="tag sale">50%</span>
+          <span class="tag gift">증정</span>
+        </div>
+      </a>
+      <div class="wish-btn" onclick="toggleWish(this)">🤍</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="#">회사소개</a>
+      <a href="#">이용약관</a>
+      <a href="#"><strong>개인정보처리방침</strong></a>
+      <a href="#">청소년보호정책</a>
+      <a href="#">사업자정보확인</a>
+      <a href="#">입점/제휴문의</a>
+    </div>
+    <div class="footer-info">
+      (주)올리브영 · 대표이사 : 구현서 · 사업자등록번호 : 107-86-67310<br>
+      통신판매업신고번호 : 제2013-서울강남-00828호 · 서울특별시 중구 청계천로 100 시그니쳐타워 서관<br>
+      고객센터 : 1544-6060 · 이메일 : oliveyoung@oliveyoung.co.kr<br>
+      COPYRIGHT &copy; OLIVEYOUNG CO., LTD. ALL RIGHTS RESERVED.
+    </div>
+  </div>
+</footer>
+
+<div class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲<br>TOP</div>
+
+<script>
+  function toggleWish(btn) {
+    const isLiked = btn.classList.toggle('liked');
+    btn.textContent = isLiked ? '❤️' : '🤍';
+  }
+</script>
+
+</body>
+</html>

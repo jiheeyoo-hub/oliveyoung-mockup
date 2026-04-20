@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이벤트 | 올리브영</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; font-size: 14px; color: #222; background: #fff; }
+    a { text-decoration: none; color: inherit; }
+
+    .top-bar { background: #fff; border-bottom: 1px solid #eee; padding: 8px 0; }
+    .top-bar-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: flex-end; gap: 16px; font-size: 12px; color: #555; padding: 0 20px; }
+    .top-bar-inner a { color: #555; }
+    .top-bar-inner span { color: #ddd; }
+
+    header { background: #fff; border-bottom: 2px solid #222; padding: 16px 0; position: sticky; top: 0; z-index: 100; }
+    .header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 24px; padding: 0 20px; }
+    .logo { font-size: 26px; font-weight: 900; letter-spacing: -1px; color: #222; flex-shrink: 0; }
+    .search-wrap { flex: 1; max-width: 500px; }
+    .search-box { display: flex; border: 2px solid #222; border-radius: 24px; overflow: hidden; }
+    .search-box input { flex: 1; border: none; outline: none; padding: 10px 16px; font-size: 14px; font-family: inherit; }
+    .search-box button { background: none; border: none; cursor: pointer; padding: 0 16px; font-size: 18px; }
+    .header-actions { display: flex; gap: 16px; margin-left: auto; font-size: 13px; }
+    .header-actions a { display: flex; align-items: center; gap: 4px; color: #444; white-space: nowrap; }
+
+    nav.gnb { background: #fff; border-bottom: 1px solid #eee; }
+    .gnb-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: stretch; padding: 0 20px; }
+    .gnb-category { display: flex; align-items: center; gap: 8px; padding: 14px 20px; background: #222; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; position: relative; user-select: none; }
+    .gnb-category:hover .category-dropdown { display: block; }
+    .category-dropdown { display: none; position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid #ddd; width: 180px; z-index: 200; box-shadow: 2px 4px 12px rgba(0,0,0,.1); }
+    .category-dropdown a { display: block; padding: 10px 16px; font-size: 13px; color: #333; border-bottom: 1px solid #f5f5f5; }
+    .category-dropdown a:hover { background: #f5f5f5; }
+    .gnb-menu { display: flex; list-style: none; align-items: center; }
+    .gnb-menu li a { display: block; padding: 14px 22px; font-size: 15px; font-weight: 600; color: #222; white-space: nowrap; }
+    .gnb-menu li a:hover { color: #01a862; }
+    .gnb-menu li a.sale { color: #e5253e; }
+    .gnb-menu li a.active { color: #01a862; border-bottom: 2px solid #01a862; }
+
+    .page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* Breadcrumb */
+    .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; padding: 16px 0 24px; }
+    .breadcrumb a { color: #888; }
+    .breadcrumb a:hover { color: #222; }
+    .breadcrumb .sep { color: #ccc; }
+    .breadcrumb .current { color: #222; font-weight: 600; }
+
+    /* Tab bar */
+    .tab-bar { display: flex; border-bottom: 2px solid #eee; margin-bottom: 36px; gap: 0; }
+    .tab-btn { padding: 14px 28px; font-size: 15px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .2s, border-color .2s; }
+    .tab-btn.active { color: #222; border-bottom-color: #222; }
+    .tab-btn:hover { color: #222; }
+
+    /* Event grid */
+    .event-list-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px 20px; margin-bottom: 60px; }
+
+    .event-card-item { display: block; cursor: pointer; border-radius: 12px; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+    .event-card-item:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+
+    .event-thumb { width: 100%; aspect-ratio: 370 / 200; overflow: hidden; background: #f0f0f0; }
+    .event-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+    .event-card-item:hover .event-thumb img { transform: scale(1.04); }
+
+    .event-info { padding: 14px 4px 10px; }
+    .event-title-line { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px; }
+    .event-badge { flex-shrink: 0; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-top: 2px; }
+    .event-badge.ongoing { background: #e8f9f1; color: #01a862; border: 1px solid #b0eed4; }
+    .event-badge.soon { background: #fff0f0; color: #e5253e; border: 1px solid #ffd4d4; }
+    .event-name { font-size: 14px; font-weight: 700; color: #222; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .event-sub { font-size: 12px; color: #666; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .event-date { font-size: 11px; color: #aaa; }
+
+    footer { background: #f8f8f8; border-top: 1px solid #e5e5e5; padding: 36px 20px; margin-top: 60px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-links { display: flex; gap: 24px; margin-bottom: 18px; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: #666; }
+    .footer-info { font-size: 11px; color: #aaa; line-height: 1.9; }
+
+    .scroll-top { position: fixed; bottom: 28px; right: 28px; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,.12); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-inner">
+    <a href="https://www.oliveyoung.co.kr/store/member/memberJoin.do" target="_blank">회원가입</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/member/memberLogin.do" target="_blank">로그인</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/cart/getCartList.do" target="_blank">장바구니</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/order/orderList.do" target="_blank">주문배송</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/customer/customerCenter.do" target="_blank">고객센터</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/storeMap/getStoreMap.do" target="_blank">올영매장</a><span>|</span>
+    <a href="https://www.oliveyoung.co.kr/store/etc/getGlobalIntro.do" target="_blank">Global</a>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">OLIVE YOUNG</a>
+    <div class="search-wrap">
+      <form action="https://www.oliveyoung.co.kr/store/search/getSearchMain.do" method="get" target="_blank">
+        <div class="search-box">
+          <input type="text" name="query" placeholder="상품, 브랜드, 성분 검색" />
+          <button type="submit">🔍</button>
+        </div>
+      </form>
+    </div>
+    <div class="header-actions">
+      <a href="https://www.oliveyoung.co.kr/store/delivery/getDeliveryList.do" target="_blank">🛎 오늘드림</a>
+      <a href="https://www.oliveyoung.co.kr/store/storeMap/getStoreMap.do" target="_blank">📍 올영매장찾기 ▾</a>
+      <a href="https://www.oliveyoung.co.kr/store/display/getRecentGoodsList.do" target="_blank">🕐 최근 본 상품 ▾</a>
+    </div>
+  </div>
+</header>
+
+<nav class="gnb">
+  <div class="gnb-inner">
+    <div class="gnb-category">
+      ☰ 카테고리
+      <div class="category-dropdown">
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010012" target="_blank">스킨케어</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010010" target="_blank">메이크업/네일</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010011" target="_blank">뷰티소품</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010014" target="_blank">더모 코스메틱</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010013" target="_blank">향수/디퓨저</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010009" target="_blank">헤어케어</a>
+        <a href="https://www.oliveyoung.co.kr/store/display/getMCategoryList.do?dispCatNo=100000100010008" target="_blank">바디케어</a>
+      </div>
+    </div>
+    <ul class="gnb-menu">
+      <li><a href="https://www.oliveyoung.co.kr/store/display/getSpecialList.do" target="_blank">오특</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/ranking/getRankingMain.do" target="_blank">랭킹</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/etc/getBerryMain.do" target="_blank">올리브베리</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/display/getThemeShopList.do" target="_blank">테마관</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/display/getPlanShopList.do" target="_blank">기획전</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/sale/getSaleMain.do" target="_blank"><span class="sale">세일</span></a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/etc/getGiftCardMain.do" target="_blank">기프트카드</a></li>
+      <li><a href="https://www.oliveyoung.co.kr/store/member/memberBenefitMain.do" target="_blank">멤버십/쿠폰</a></li>
+      <li><a href="event.html" class="active">이벤트</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">홈</a>
+    <span class="sep">›</span>
+    <span class="current">이벤트</span>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab-btn active">진행중인 이벤트</div>
+    <div class="tab-btn">종료된 이벤트</div>
+  </div>
+
+  <div class="event-list-grid">
+
+    <!-- Event 1: 메디힐 슈퍼브랜드데이 → event-detail.html -->
+    <a href="event-detail.html" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/2715144044457378061.jpg" alt="메디힐 고객 감사세일" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">올리브영 1위 브랜드 메디힐 고객 감사세일</span>
+        </div>
+        <div class="event-sub">선착순 쿠폰+증정 혜택</div>
+        <div class="event-date">26.4.20 ~ 26.4.23</div>
+      </div>
+    </a>
+
+    <!-- Event 2 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/2222797865907175535.jpg" alt="컬러뷰티 특가" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">뷰-티나게 꾸미는 컬러뷰티 특가!</span>
+        </div>
+        <div class="event-sub">최대 32% 할인으로 만나보세요</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 3 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/2190056387261241828.jpg" alt="서바이벌 뷰티" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">4월 빨라진 여름, 서바이벌 뷰티</span>
+        </div>
+        <div class="event-sub">120여 개 생존 뷰티템 공개!</div>
+        <div class="event-date">26.4.06 ~ 26.7.31</div>
+      </div>
+    </a>
+
+    <!-- Event 4 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/5379167529991393571.jpg" alt="올리브영 SOL통장" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">최대 이자 9만원 +11만원 리워드</span>
+        </div>
+        <div class="event-sub">올리브영 SOL통장 만나보세요</div>
+        <div class="event-date">26.4.13 ~ 27.4.12</div>
+      </div>
+    </a>
+
+    <!-- Event 5 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/3742510812457881795.jpg" alt="플라이밀 마녀스프" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">저칼로리&amp;저당 플라이밀 마녀스프</span>
+        </div>
+        <div class="event-sub">쉽게 완성하는 간편 레시피</div>
+        <div class="event-date">26.4.11 ~ 26.4.20</div>
+      </div>
+    </a>
+
+    <!-- Event 6 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/59317598055057492.jpg" alt="기프트카드 증정" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">펀딩 리뷰 남기면 기프트카드 증정!</span>
+        </div>
+        <div class="event-sub">리뷰 작성 고객 기프트카드 증정</div>
+        <div class="event-date">26.4.14 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 7 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/4227608235154947834.jpg" alt="광고 동의 혜택" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">광고 동의하면 바로 혜택을 드려요!</span>
+        </div>
+        <div class="event-sub">똑똑한 맞춤추천으로 만족도 UP</div>
+        <div class="event-date">26.4.20 ~ 26.12.31</div>
+      </div>
+    </a>
+
+    <!-- Event 8 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/5183468141833867169.jpg" alt="나라사랑카드 캐시백" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">나라사랑카드 전용 최대1.2만원 캐시백</span>
+        </div>
+        <div class="event-sub">매월 돌려 받는 즐거움!</div>
+        <div class="event-date">26.2.01 ~ 26.12.31</div>
+      </div>
+    </a>
+
+    <!-- Event 9 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/361274089625354409.jpg" alt="럭퀴즈온" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">퀴즈만 풀어도 쿠폰&amp;경품이 와르르!</span>
+        </div>
+        <div class="event-sub">목요일에 만나는 럭-퀴즈온!</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 10 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/5046744801830888686.jpg" alt="만 14-19세 추가 혜택" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">만 14-19세라면 추가 혜택</span>
+        </div>
+        <div class="event-sub">쿠폰 + 무료배송 + 결제 혜택</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 11 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/4109118828823998439.jpg" alt="오운완 루틴" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">나만의 완벽한 오운완 루틴</span>
+        </div>
+        <div class="event-sub">혜택 가득한 상품을 만나보세요</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 12 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/5680330562406469824.jpg" alt="올리브 클래스" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">다채로운 일상을 위한 4월의 올리브 클래스</span>
+        </div>
+        <div class="event-sub">쿠킹 클래스 &amp; PT 체험 까지</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 13 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/3657108522683423435.jpg" alt="무료 포장 서비스" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">상위 등급 전용 무료 포장 서비스</span>
+        </div>
+        <div class="event-sub">전국 올리브영 매장에서 만나요</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 14 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/2617268625232222972.jpg" alt="이 달의 브랜드" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">올리브영이 PICK한 이 달의 브랜드</span>
+        </div>
+        <div class="event-sub">온오프라인에서 만나보세요!</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+    <!-- Event 15 -->
+    <a href="https://www.oliveyoung.co.kr/store/main/getEventList.do" target="_blank" class="event-card-item">
+      <div class="event-thumb">
+        <img src="https://image.oliveyoung.co.kr/uploads/images//event/5505990305254775043.jpg" alt="현대카드 쿠킹 클래스" loading="lazy" />
+      </div>
+      <div class="event-info">
+        <div class="event-title-line">
+          <span class="event-badge ongoing">진행중</span>
+          <span class="event-name">현대카드 쿠킹 클래스 지금 응모하러 가기!</span>
+        </div>
+        <div class="event-sub">올리브 클래스 with 현대카드</div>
+        <div class="event-date">26.4.01 ~ 26.4.30</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="#">회사소개</a>
+      <a href="#">이용약관</a>
+      <a href="#"><strong>개인정보처리방침</strong></a>
+      <a href="#">청소년보호정책</a>
+      <a href="#">사업자정보확인</a>
+      <a href="#">입점/제휴문의</a>
+    </div>
+    <div class="footer-info">
+      (주)올리브영 · 대표이사 : 구현서 · 사업자등록번호 : 107-86-67310<br>
+      통신판매업신고번호 : 제2013-서울강남-00828호 · 서울특별시 중구 청계천로 100 시그니쳐타워 서관<br>
+      고객센터 : 1544-6060 · 이메일 : oliveyoung@oliveyoung.co.kr<br>
+      COPYRIGHT &copy; OLIVEYOUNG CO., LTD. ALL RIGHTS RESERVED.
+    </div>
+  </div>
+</footer>
+
+<div class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲<br>TOP</div>
+
+</body>
+</html>
